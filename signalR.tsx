@@ -26,7 +26,7 @@ type ProviderProps = {
     /**
      * Fire when has error event
      */
-    onError?: (error: any) => void;
+    onError?: (error: Error) => void;
 };
 
 export type SignalRContextProps = {
@@ -50,7 +50,7 @@ export const useSignalRContext = () => {
  * @param options IHttpConnectionOptions
  * @param dependecies? Array< any > trigger re-render
  * @param startCondition? boolean, Condition for start()
- * @param onError? (error: any) => void, fire when has error event
+ * @param onError? (error: Error) => void, fire when has error event
  * @info Reconnect is infinity.
  * @returns Provider
  * @example <SignalRProvider
@@ -82,7 +82,7 @@ export const SignalRProvider = ({children, url, options, dependecies = [], start
         _connection.onreconnected(updateConnection);
         _connection.onreconnecting(updateConnection);
 
-        // overwrite functions to keep _connection as "this" and add handle error..
+        // overwrite functions to keep _connection as "this" and add error handler..
         const origOn = _connection.on;
         const origOff = _connection.off;
         const origSend = _connection.send;
