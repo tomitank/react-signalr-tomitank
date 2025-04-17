@@ -7,7 +7,6 @@
  */
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { ToastLifeTime, useErrorHandler } from "src/hooks/errorHandler";
 import { HubConnection, HubConnectionBuilder, HubConnectionState, IHttpConnectionOptions, IStreamResult } from "@microsoft/signalr";
 
 type ProviderProps = {
@@ -24,6 +23,10 @@ type ProviderProps = {
      * @default true
      */
     startCondition?: boolean;
+    /**
+     * Fire when has error event
+     */
+    onError?: (error: any) => void;
 };
 
 export type SignalRContextProps = {
@@ -47,6 +50,7 @@ export const useSignalRContext = () => {
  * @param options IHttpConnectionOptions
  * @param dependecies? Array< any > trigger re-render
  * @param startCondition? boolean, Condition for start()
+ * @param onError? (error: any) => void, fire when has error event
  * @info Reconnect is infinity.
  * @returns Provider
  * @example <SignalRProvider
@@ -57,8 +61,7 @@ export const useSignalRContext = () => {
  * <>...</>
  * </SignalRProvider>
  */
-export const SignalRProvider = ({children, url, options, dependecies = [], startCondition = true}: ProviderProps) => {
-    const errorHandler = useErrorHandler();
+export const SignalRProvider = ({children, url, options, dependecies = [], startCondition = true, onError = ()=>{}}: ProviderProps) => {
     const [connection, setConnection] = useState<HubConnection|null>(null);
     let connectionStateInstace = HubConnectionState.Disconnected;
 
@@ -87,8 +90,8 @@ export const SignalRProvider = ({children, url, options, dependecies = [], start
         const origStream = _connection.stream;
         _connection.on = (methodName: string, newMethod: (...args: any[]) => void) => origOn.call(_connection, methodName, newMethod);
         _connection.off = (methodName: string, method?: (...args: any[]) => void) => origOff.call(_connection, methodName, method!);
-        _connection.send = (methodName: string, ...args: any[]) => origSend.call(_connection, methodName, ...args).catch(errorHandler) as Promise<void>;
-        _connection.invoke = <T extends any>(methodName: string, ...args: any[]) => origInvoke.call(_connection, methodName, ...args).catch(errorHandler) as Promise<T>;
+        _connection.send = (methodName: string, ...args: any[]) => origSend.call(_connection, methodName, ...args).catch(onError) as Promise<void>;
+        _connection.invoke = <T extends any>(methodName: string, ...args: any[]) => origInvoke.call(_connection, methodName, ...args).catch(onError) as Promise<T>;
         _connection.stream = <T extends any>(methodName: string, ...args: any[]) => origStream.call(_connection, methodName, ...args) as IStreamResult<T>;
 
         if (startCondition) {
@@ -100,7 +103,7 @@ export const SignalRProvider = ({children, url, options, dependecies = [], start
                             updateConnection.call(_connection);
                         }).catch((reason) => {
                             updateConnection.call(_connection);
-                            errorHandler({message: `Socket error! ${reason}`, lifeTime: ToastLifeTime.OneDay});
+                            onError(new Error(`${reason}`));
                         });
                     }
                 }, 0);
