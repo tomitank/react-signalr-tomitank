@@ -1,8 +1,14 @@
 {
   "name": "react-signalr-tomitank",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
-  "dependencies": {
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
     "@microsoft/signalr": "^8.0.7",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.20",
