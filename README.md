@@ -1,5 +1,8 @@
 # react-signalr-tomitank
-Simple, stable react signalR provider with status tracking
+* Simple, stable react signalR provider with status tracking
+* Author: Tamas Kuzmics (Hungary)
+* Email: tanky.hu@gmail.com
+* https://github.com/tomitank
 
 ```
 <SignalRProvider
