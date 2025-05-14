@@ -1,2 +1,2 @@
 
-export {SignalRProvider} from "./signalR";
+export {SignalRProvider, useSignalRContext, SignalRContextProps, SignalRContext} from "./signalR";
