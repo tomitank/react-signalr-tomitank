@@ -1,6 +1,6 @@
 {
   "name": "react-signalr-tomitank",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "description": "",
   "main": "dist/index.js",
@@ -14,9 +14,7 @@
     "react-dom": "^18.2.0",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
-    "@microsoft/signalr": "^8.0.7",
-    "@elastic/eui": "^102.1.0",
-    "@emotion/react": "^11.14.0"
+    "@microsoft/signalr": "^8.0.7"
   },
   "devDependencies": {
     "@types/node": "^22.13.13",
